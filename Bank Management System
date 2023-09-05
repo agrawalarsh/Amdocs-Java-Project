@@ -1,0 +1,134 @@
+import java.util.*;
+
+class BankAccount {
+    public static Map<BankAccount, String> Bank = new HashMap<BankAccount, String>();
+    String holdername;
+    String bankname;
+    String IFSCcode;
+    String accountno;
+    String accounttype;
+    int balance = 0;
+    int k=10;
+    Vector<String>th=new Vector<String>();
+
+    BankAccount(String name, String b_name, String IFSC, String no, String atype) {
+        
+        this.holdername = name;
+        this.bankname = b_name;
+        this.IFSCcode = IFSC;
+        this.accountno = no;
+        this.accounttype = atype;
+    }
+
+    public static void info(BankAccount ba) {
+        System.out.println("Account holder name is " + ba.holdername);
+        System.out.println(ba.holdername + " has an account in " + ba.bankname);
+        System.out.println(ba.holdername + " account number is " + ba.accountno);
+        System.out.println(ba.holdername + " account has a total balance of " + ba.balance);
+        System.out.println("Account type of " + ba.holdername + " is " + ba.accounttype+" Account");
+        System.out.println(ba.bankname + " IFSC code is " + ba.IFSCcode);
+        System.out.println("....................................................................");
+    }
+    public void transactionhistory(){
+        System.out.println("Transaction History of given account with account holder name "+this.holdername+" is => ");
+        System.out.println();
+        System.out.println(th);
+        System.out.println();
+        System.out.println("Final balance in "+this.holdername+"'s account is "+this.balance);
+        System.out.println();
+    }
+    public void display() {
+        System.out.println("Information of given account is => ");
+        System.out.println();
+        System.out.println("Account holder name is " + this.holdername);
+        System.out.println(this.holdername + " has an account in " + this.bankname);
+        System.out.println(this.holdername + " account number is " + this.accountno);
+        System.out.println(this.holdername + " account has a total balance of " + this.balance);
+        System.out.println("Account type of " + this.holdername + " is " + this.accounttype+" Account");
+        System.out.println(this.bankname + " IFSC code is " + this.IFSCcode);
+    }
+
+    public void deposit(int amt) {
+        if (amt + this.balance <= 100000) {
+            this.balance += amt;
+            this.th.add("Amount "+amt+" is credited on "+ k+":00 hrs in account "+this.accountno);
+            k++;
+        } else {
+            System.out.println("Amount limit exceeded for today. Please try again later");
+            
+        }
+    }
+
+    public void withdraw(int amt) {
+        if (amt > this.balance) {
+            System.out.println("Not enough balance in your account to withdraw " + amt + " amount of money");
+        } else {
+            this.balance -= amt;
+            this.th.add("Amount "+amt+" is debited on "+ k+":00 hrs in account "+this.accountno);
+            k++;
+        }
+    }
+
+    public static void listofaccounts(String bankname) {
+        for (Map.Entry<BankAccount, String> set : Bank.entrySet()) {
+            if (set.getValue().equals(bankname)) {
+                info(set.getKey());
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n;
+        System.out.println("Enter total number of bank accounts you want to open => ");
+        n = sc.nextInt();
+        for (int i = 1; i <= n; i++) {
+            System.out.println("Enter name of Account holder => ");
+            String name = sc.next();
+            System.out.println("Enter bank name in which you want to open your account => ");
+            String bname = sc.next();
+            System.out.println("Enter IFSC code of bank " + bname + " => ");
+            String IFSC = sc.next();
+            System.out.println("Enter account number => ");
+            String no = sc.next();
+            System.out.println("Enter type of Account => ");
+            String atype = sc.next();
+            BankAccount b = new BankAccount(name, bname, IFSC, no, atype);
+            BankAccount.Bank.put(b, bname);
+            System.out.println();
+            System.out.println("Bank Account of "+name+" has been created");
+            System.out.println();
+            int l,am;
+            System.out.println("Do you want to credit or debit money in your account.Press 1 to credit. 2 to debit. other to exit");
+            while(true){
+                System.out.println("Enter your choice => ");
+                l=sc.nextInt();
+                if(l==1){
+                    System.out.println("Enter amount to deposit => ");
+                    am=sc.nextInt();
+                    b.deposit(am);
+                }
+                else if(l==2){
+                    System.out.println("Enter amount to withdraw => ");
+                    am=sc.nextInt();
+                    b.withdraw(am);
+                }
+                else{
+                    break;
+                }
+            }
+            System.out.println();
+            b.transactionhistory();
+            b.display();
+            System.out.println();
+            }
+        System.out.println();
+        System.out.println("Enter the name of bank of which you want to print the info of account holders => ");
+        String bk=sc.next();
+        System.out.println();
+        BankAccount.listofaccounts(bk);
+        System.out.println();
+    }
+}
